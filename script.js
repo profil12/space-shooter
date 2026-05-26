@@ -33,7 +33,8 @@ let bossAnnouncementTimer = null;
 let musicEnabled = true;
 let musicActivated = false;
 let currentMusic = null;
-
+let currentMusicSource = null;
+let musicActivated = false;
 const supersList = [
     { id: 'sonic', name: '🎵 Звуковой удар', desc: '20 урона всем врагам вокруг', price: 0, owned: true, soundId: 'superSonic' },
     { id: 'fastShoot', name: '⚡ Сверхскорострельность', desc: 'Стрельба каждые 0.06 сек, 4 сек', price: 3000, owned: false, soundId: 'superFastshoot' },
@@ -1332,9 +1333,9 @@ if (fixMenuLoseBtn) {
         document.getElementById('game-overlay')?.classList.add('hidden');
         document.getElementById('pause-overlay')?.classList.add('hidden');
         // Останавливаем музыку
-        if (currentMusicSource) {
-            try { currentMusicSource.stop(); } catch(e) {}
-            currentMusicSource = null;
+        if (window.currentMusicSource) {
+            try { window.currentMusicSource.stop(); } catch(e) {}
+            window.currentMusicSource = null;
         }
     };
 }
