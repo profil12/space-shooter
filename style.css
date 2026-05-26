@@ -1,0 +1,511 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background: linear-gradient(135deg, #0a0f1e, #0a1a2a);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Courier New', 'Monaco', monospace;
+    overflow: hidden;
+    touch-action: none;
+}
+
+/* ========== ЗАГРУЗОЧНЫЙ ЭКРАН ========== */
+@keyframes pulse {
+    0% { opacity: 0.6; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1.05); }
+}
+.loading-icon {
+    animation: pulse 0.8s infinite alternate;
+}
+
+/* ========== МЕНЮ ========== */
+.menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.menu-overlay.hidden { display: none; }
+
+.menu-container {
+    text-align: center;
+    background: linear-gradient(135deg, #1a2a3a, #0a1a2a);
+    padding: 30px 40px;
+    border-radius: 50px;
+    border: 2px solid #ffaa00;
+    box-shadow: 0 0 50px rgba(255,170,0,0.4);
+    max-width: 90vw;
+    width: 450px;
+}
+.menu-container h1 {
+    font-size: 1.8rem;
+    color: #ffaa00;
+    margin-bottom: 20px;
+    text-shadow: 0 0 10px #ff5500;
+}
+.menu-stats {
+    font-size: 2rem;
+    color: #ffd700;
+    margin-bottom: 25px;
+    text-shadow: 0 0 5px #ffaa00;
+}
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.menu-buttons button {
+    background: linear-gradient(135deg, #ff5500, #ff7700);
+    border: none;
+    padding: 14px 20px;
+    border-radius: 60px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    font-family: inherit;
+    transition: 0.2s;
+    box-shadow: 0 4px 15px rgba(255,85,0,0.3);
+}
+.menu-buttons button:active { transform: scale(0.96); }
+.credits {
+    margin-top: 20px;
+    color: #88aaff;
+    font-size: 0.7rem;
+}
+
+/* ========== МАГАЗИН (КРАСИВЫЙ) ========== */
+.shop-container {
+    width: 500px;
+    max-width: 90vw;
+    padding: 25px;
+}
+.shop-container h2 {
+    font-size: 1.8rem;
+    color: #ffd700;
+    text-align: center;
+    margin-bottom: 15px;
+}
+.shop-coins {
+    font-size: 1.6rem;
+    color: #ffd700;
+    text-align: center;
+    margin-bottom: 25px;
+    background: rgba(0,0,0,0.5);
+    display: inline-block;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px 20px;
+    border-radius: 40px;
+}
+.shop-items {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 55vh;
+    overflow-y: auto;
+    padding-right: 8px;
+}
+.shop-item {
+    background: linear-gradient(135deg, #1e2e3e, #0e1e2e);
+    border: 1px solid #ffaa00;
+    border-radius: 60px;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    transition: 0.2s;
+}
+.shop-item:hover {
+    transform: scale(1.01);
+    border-color: #ff7700;
+}
+.item-skin {
+    color: #00ffcc;
+    font-weight: bold;
+    font-size: 1rem;
+    flex: 2;
+}
+.item-price {
+    color: #ffd700;
+    font-weight: bold;
+    min-width: 80px;
+    text-align: center;
+}
+.buy-btn, .buy-skin-btn, .buy-super-btn, .buy-laser-btn {
+    background: linear-gradient(135deg, #ff5500, #ff7700);
+    border: none;
+    padding: 8px 20px;
+    border-radius: 40px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: monospace;
+    transition: 0.2s;
+}
+.buy-btn:active, .buy-skin-btn:active, .buy-super-btn:active, .buy-laser-btn:active {
+    transform: scale(0.95);
+}
+.shop-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.shop-buttons button {
+    background: linear-gradient(135deg, #ff5500, #ff7700);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 40px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+}
+.back-btn, .shop-back {
+    background: #333;
+    border: none;
+    padding: 10px 25px;
+    border-radius: 40px;
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 20px;
+    width: 100%;
+}
+.back-btn:hover, .shop-back:hover {
+    background: #ff5500;
+}
+.shop-submenu.hidden {
+    display: none;
+}
+.shop-submenu {
+    margin-top: 15px;
+}
+
+/* ========== СКИНЫ (ВЫБОР) ========== */
+.skins-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin: 20px 0;
+    max-height: 55vh;
+    overflow-y: auto;
+}
+.skin-btn {
+    background: linear-gradient(135deg, #2a3a4a, #1a2a3a);
+    border: 1px solid #ffaa00;
+    border-radius: 50px;
+    padding: 12px 8px;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    transition: 0.2s;
+}
+.skin-btn:active { transform: scale(0.96); }
+.skin-btn:hover { background: #ff5500; border-color: #ffaa00; }
+
+/* ========== ПРОКАЧКА БАФФОВ ========== */
+.upgrade-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin: 20px 0;
+}
+.upgrade-item {
+    background: linear-gradient(135deg, #1a2a3a, #0a1a2a);
+    border: 1px solid #ffaa00;
+    border-radius: 60px;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.upgrade-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.upgrade-name {
+    color: #00ffcc;
+    font-weight: bold;
+    font-size: 1rem;
+}
+.upgrade-level {
+    color: #ffd700;
+    font-size: 0.8rem;
+}
+.upgrade-price {
+    color: #ffaa55;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+.upgrade-btn {
+    background: linear-gradient(135deg, #ff5500, #ff7700);
+    border: none;
+    padding: 8px 20px;
+    border-radius: 40px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* ========== ИГРОВОЙ ЭКРАН ========== */
+.game-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+}
+.game-container.hidden { display: none; }
+#gameCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: #010a14;
+    cursor: none;
+}
+
+/* ========== HUD ========== */
+.ui {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    background: rgba(0,0,0,0.65);
+    backdrop-filter: blur(5px);
+    padding: 10px 18px;
+    z-index: 10;
+    font-size: 1rem;
+    flex-wrap: wrap;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255,170,0,0.3);
+}
+.score, .coins, .lives, .buffs {
+    color: #00ffcc;
+    font-weight: bold;
+    text-shadow: 0 0 5px #00aaff;
+}
+.ui button {
+    background: linear-gradient(135deg, #ff5500, #ff7700);
+    border: none;
+    padding: 5px 16px;
+    border-radius: 30px;
+    color: white;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* ========== ПАУЗА (КРАСИВАЯ) ========== */
+.pause-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+.pause-overlay.hidden { display: none; }
+.pause-content {
+    background: linear-gradient(135deg, #1a2a3a, #0a1a2a);
+    padding: 40px 60px;
+    border-radius: 70px;
+    text-align: center;
+    border: 2px solid #ffaa00;
+    box-shadow: 0 0 50px rgba(255,170,0,0.4);
+}
+.pause-content h2 {
+    font-size: 2.8rem;
+    color: #ffaa00;
+    margin-bottom: 25px;
+    text-shadow: 0 0 10px #ff5500;
+}
+.pause-content button {
+    background: linear-gradient(135deg, #ff5500, #ff7700);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    margin: 8px;
+    transition: 0.2s;
+}
+.pause-content button:hover {
+    transform: scale(1.05);
+}
+
+/* ========== ПОРАЖЕНИЕ (КРАСИВОЕ) ========== */
+.game-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.95);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.4s ease;
+}
+.game-overlay.hidden { display: none; }
+.game-over-content {
+    background: linear-gradient(135deg, #1a0a0a, #2a0a0a);
+    padding: 40px 60px;
+    border-radius: 70px;
+    text-align: center;
+    border: 3px solid #ff3333;
+    box-shadow: 0 0 50px rgba(255,0,0,0.5);
+    animation: shake 0.5s ease;
+}
+.defeat-text {
+    font-size: 3rem;
+    color: #ff3333;
+    text-shadow: 0 0 20px #ff0000;
+    margin-bottom: 20px;
+    letter-spacing: 6px;
+    font-family: 'Courier New', monospace;
+}
+.game-over-content p {
+    font-size: 1.5rem;
+    color: #ffd700;
+    margin-bottom: 30px;
+}
+.game-over-content button {
+    background: linear-gradient(135deg, #ff5500, #ff7700);
+    border: none;
+    padding: 12px 30px;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    margin: 8px;
+    transition: 0.2s;
+    font-family: monospace;
+}
+.game-over-content button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #ff7700, #ff9900);
+}
+.game-over-content button:active {
+    transform: scale(0.96);
+}
+
+/* ========== БОСС ========== */
+.boss-announcement {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.92);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+    animation: fadeIn 0.3s;
+}
+.boss-announcement.hidden { display: none; }
+.announcement-content {
+    background: linear-gradient(135deg, #aa0000, #ff3300);
+    padding: 30px 50px;
+    border-radius: 60px;
+    text-align: center;
+    border: 3px solid gold;
+}
+.announcement-content h1 {
+    font-size: 2rem;
+    color: gold;
+}
+.announcement-content p {
+    color: white;
+    margin-top: 10px;
+}
+
+/* ========== КНОПКА МУЗЫКИ ========== */
+#music-toggle {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    z-index: 1000;
+    background: #ff5500;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 40px;
+    color: white;
+    cursor: pointer;
+    font-family: monospace;
+    font-weight: bold;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+/* ========== АНИМАЦИИ ========== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+/* ========== СКРОЛЛ ========== */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #1a2a3a; border-radius: 10px; }
+::-webkit-scrollbar-thumb { background: #ff5500; border-radius: 10px; }
+
+/* ========== МОБИЛЬНАЯ АДАПТАЦИЯ ========== */
+@media (max-width: 600px) {
+    .ui { font-size: 0.75rem; padding: 8px 12px; gap: 8px; }
+    .menu-container h1 { font-size: 1.4rem; }
+    .menu-container { padding: 20px 25px; }
+    .menu-stats { font-size: 1.5rem; }
+    .menu-buttons button { padding: 10px 16px; font-size: 1rem; }
+    .shop-item { padding: 10px 15px; }
+    .item-skin { font-size: 0.85rem; }
+    .item-price { font-size: 0.8rem; min-width: 60px; }
+    .buy-btn { padding: 6px 12px; font-size: 0.8rem; }
+    .pause-content h2 { font-size: 1.8rem; }
+    .pause-content button { padding: 8px 20px; font-size: 1rem; }
+    .defeat-text { font-size: 2rem; letter-spacing: 3px; }
+    .game-over-content p { font-size: 1.2rem; }
+    .game-over-content button { padding: 8px 20px; font-size: 1rem; }
+}

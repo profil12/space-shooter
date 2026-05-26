@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Космический защитник — ХАРДКОР</title>
+    <link rel="stylesheet" href="C:\Users\Admin\Desktop\проекты\защитник\style.css">
+</head>
+<body>
+    <!-- ЗАГРУЗОЧНЫЙ ЭКРАН -->
+    <div id="loading-screen" style="position:fixed; top:0; left:0; width:100%; height:100%; background:linear-gradient(135deg, #0a0f1e, #0a1a2a); display:flex; justify-content:center; align-items:center; flex-direction:column; z-index:9999;">
+        <div style="text-align:center;">
+            <div class="loading-icon" style="font-size:5rem; margin-bottom:20px;">🚀</div>
+            <h2 style="color:#ffaa00; font-family:'Courier New', monospace; letter-spacing:4px;">ЗАГРУЗКА...</h2>
+            <div style="width:280px; height:6px; background:#333; border-radius:6px; margin-top:25px; overflow:hidden; box-shadow:0 0 10px rgba(0,0,0,0.5);">
+                <div id="loading-bar" style="width:0%; height:100%; background:linear-gradient(90deg, #ff5500, #ffaa00); border-radius:6px; transition:width 0.3s ease;"></div>
+            </div>
+            <p id="loading-text" style="color:#88aaff; margin-top:15px; font-family:'Courier New', monospace;">Загрузка ресурсов... 0%</p>
+        </div>
+    </div>
+
+    <!-- Фоновые звёзды (отдельный слой) -->
+    <canvas id="starsCanvas" style="position: fixed; top:0; left:0; width:100%; height:100%; z-index: -1; pointer-events: none;"></canvas>
+    <!-- Демо-режим в меню -->
+    <canvas id="demoCanvas" style="position: fixed; top:0; left:0; width:100%; height:100%; z-index: 5; pointer-events: none; display: none;"></canvas>
+
+    <!-- АУДИО ТРЕКИ (будут загружаться, но не играть автоматически) -->
+    <audio id="menuMusic" loop preload="auto" src="C:\Users\Admin\Desktop\проекты\защитник\sounds\menu.ogg"></audio>
+    <audio id="battleMusic" loop preload="auto" src="C:\Users\Admin\Desktop\проекты\защитник\sounds\battle.ogg"></audio>
+    <audio id="bossMusic" loop preload="auto" src="C:\Users\Admin\Desktop\проекты\защитник\sounds\boss.ogg"></audio>
+
+    <div id="main-menu" class="menu-overlay">
+        <div class="menu-container">
+            <h1>🚀 КОСМИЧЕСКИЙ ЗАЩИТНИК 🚀</h1>
+            <div class="menu-stats">🪙 <span id="menu-coins">0</span></div>
+            <div class="menu-buttons">
+                <button id="start-game-btn">⭐ НАЧАТЬ ИГРУ</button>
+                <button id="shop-btn">🛒 МАГАЗИН</button>
+                <button id="skins-menu-btn">🎨 СКИНЫ</button>
+                <button id="buffs-menu-btn">✨ ПРОКАЧКА</button>
+            </div>
+            <div class="credits">🖱️ Мышь/палец | 🔫 Автострельба | ESC — пауза</div>
+        </div>
+    </div>
+
+    <div id="shop-menu" class="menu-overlay hidden">
+        <div class="menu-container shop-container">
+            <h2>🛒 МАГАЗИН</h2>
+            <div class="shop-coins">🪙 <span id="shop-coins">0</span></div>
+            
+            <div id="shop-main-buttons" class="shop-buttons">
+                <button id="shop-skins-main">🎨 СКИНЫ</button>
+                <button id="shop-lasers-main">🎇 ЛАЗЕРЫ</button>
+                <button id="shop-supers-main">💥 СУПЕРЫ</button>
+                <button class="back-btn">🔙 НАЗАД</button>
+            </div>
+
+            <div id="skins-shop" class="shop-submenu hidden">
+                <div class="shop-items" id="skins-shop-list"></div>
+                <button class="back-btn shop-back">🔙 НАЗАД</button>
+            </div>
+
+            <div id="lasers-shop" class="shop-submenu hidden">
+                <div class="shop-buttons">
+                    <button id="laser-shape-btn">🔘 ФОРМА ЛАЗЕРА</button>
+                    <button id="laser-color-btn">🎨 ЦВЕТ ЛАЗЕРА</button>
+                </div>
+                <div id="laser-shapes-list" class="shop-items" style="display: none;"></div>
+                <div id="laser-colors-list" class="shop-items" style="display: none;"></div>
+                <button class="back-btn shop-back">🔙 НАЗАД</button>
+            </div>
+
+            <div id="supers-shop" class="shop-submenu hidden">
+                <div class="shop-items" id="supers-list"></div>
+                <button class="back-btn shop-back">🔙 НАЗАД</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="skins-menu" class="menu-overlay hidden">
+        <div class="menu-container">
+            <h2>🎨 ТВОИ СКИНЫ</h2>
+            <div class="skins-grid" id="skins-grid"></div>
+            <button class="back-btn">🔙 НАЗАД</button>
+        </div>
+    </div>
+
+    <div id="buffs-menu" class="menu-overlay hidden">
+        <div class="menu-container">
+            <h2>✨ ПРОКАЧКА БАФФОВ</h2>
+            <div class="upgrade-list">
+                <div class="upgrade-item"><div class="upgrade-info"><span class="upgrade-name">🔫 ТРОЙНАЯ СТРЕЛЬБА</span><span class="upgrade-level">Ур. <span id="triple-level">1</span></span></div><div class="upgrade-price"><span id="triple-price">200</span> 🪙</div><button class="upgrade-btn" data-upgrade="triple">⬆️ ПРОКАТАТЬ</button></div>
+                <div class="upgrade-item"><div class="upgrade-info"><span class="upgrade-name">🛡️ ЩИТ</span><span class="upgrade-level">Ур. <span id="shield-level">1</span></span></div><div class="upgrade-price"><span id="shield-price">200</span> 🪙</div><button class="upgrade-btn" data-upgrade="shield">⬆️ ПРОКАТАТЬ</button></div>
+                <div class="upgrade-item"><div class="upgrade-info"><span class="upgrade-name">⭐ УДВОЕННЫЕ ОЧКИ</span><span class="upgrade-level">Ур. <span id="double-level">1</span></span></div><div class="upgrade-price"><span id="double-price">200</span> 🪙</div><button class="upgrade-btn" data-upgrade="double">⬆️ ПРОКАТАТЬ</button></div>
+            </div>
+            <button class="back-btn">🔙 НАЗАД</button>
+        </div>
+    </div>
+
+    <div class="game-container hidden" id="game-container">
+        <canvas id="gameCanvas"></canvas>
+        <div class="ui"><div class="score">⭐ <span id="scoreValue">0</span></div><div class="coins">🪙 <span id="coinsValue">0</span></div><div class="lives">❤️ <span id="livesValue">3</span></div><div class="buffs">✨ <span id="buffsValue">0</span></div><button id="pauseBtn">⏸️</button><button id="menuBtn">🏠</button></div>
+    </div>
+
+    <div id="pause-overlay" class="pause-overlay hidden"><div class="pause-content"><h2>⏸️ ПАУЗА</h2><button id="resumeBtn">▶️</button><button id="exit-to-menu">🏠 В МЕНЮ</button></div></div>
+    <div id="game-overlay" class="game-overlay hidden"><div class="game-over-content"><h1 class="defeat-text">💀 ПОРАЖЕНИЕ 💀</h1><p>Счёт: <span id="finalScore">0</span> | 🪙 <span id="finalCoins">0</span></p><button id="restartFromLose">🔄 ИГРАТЬ</button><button id="menuFromLose">🏠 МЕНЮ</button></div></div>
+    <div id="boss-announcement" class="boss-announcement hidden"><div class="announcement-content"><h1>⚔️ БИТВА С БОССОМ ⚔️</h1><p>+50% HP КАЖДЫЙ РАЗ!</p></div></div>
+
+    <script src="C:\Users\Admin\Desktop\проекты\защитник\script.js"></script>
+</body>
+</html>
