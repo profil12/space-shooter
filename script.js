@@ -1158,21 +1158,6 @@ function handleMove(e) {
 canvas.addEventListener('mousemove', handleMove);
 canvas.addEventListener('touchmove', handleMove);
 canvas.addEventListener('touchstart', e => { e.preventDefault(); handleMove(e); });
-// ========== ДВОЙНОЙ ТАП / ДВОЙНОЙ КЛИК ДЛЯ СУПЕРА ==========
-let lastTap = 0;
-canvas.addEventListener('touchstart', (e) => {
-    const now = Date.now();
-    if (now - lastTap < 300) { // двойной тап (300 мс)
-        e.preventDefault();
-        activateSuper();
-    }
-    lastTap = now;
-});
-
-canvas.addEventListener('dblclick', (e) => {
-    e.preventDefault();
-    activateSuper();
-});
 
 let superBtn = document.createElement('div');
 superBtn.id = 'super-button';
