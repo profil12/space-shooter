@@ -1158,20 +1158,33 @@ function handleMove(e) {
 canvas.addEventListener('mousemove', handleMove);
 canvas.addEventListener('touchmove', handleMove);
 canvas.addEventListener('touchstart', e => { e.preventDefault(); handleMove(e); });
-// ========== ДВОЙНОЙ ТАП / ДВОЙНОЙ КЛИК ДЛЯ СУПЕРА ==========
-let lastTap = 0;
-canvas.addEventListener('touchstart', (e) => {
-    const now = Date.now();
-    if (now - lastTap < 300) { // двойной тап (300 мс)
-        e.preventDefault();
+// ========== ДВОЙНОЙ ТАП / КЛИК ДЛЯ СУПЕРА (РАБОТАЕТ ВЕЗДЕ) ==========
+let lastTapTime = 0;
+
+function onDoubleTapOrClick(e) {
+    e.preventDefault();
+    if (superMeter >= superMax && superCooldown === 0) {
         activateSuper();
     }
-    lastTap = now;
+}
+
+// Для телефона: двойное касание по canvas
+canvas.addEventListener('touchstart', (e) => {
+    const now = Date.now();
+    if (now - lastTapTime < 300) {
+        onDoubleTapOrClick(e);
+    }
+    lastTapTime = now;
 });
 
-canvas.addEventListener('dblclick', (e) => {
-    e.preventDefault();
-    activateSuper();
+// Для ПК: двойной клик по canvas
+canvas.addEventListener('dblclick', onDoubleTapOrClick);
+
+// Для всего документа (если мышь за пределами canvas, но супер всё равно нужен)
+document.addEventListener('dblclick', (e) => {
+    if (superMeter >= superMax && superCooldown === 0) {
+        activateSuper();
+    }
 });
 let superBtn = document.createElement('div');
 superBtn.id = 'super-button';
