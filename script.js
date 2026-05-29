@@ -1158,7 +1158,21 @@ function handleMove(e) {
 canvas.addEventListener('mousemove', handleMove);
 canvas.addEventListener('touchmove', handleMove);
 canvas.addEventListener('touchstart', e => { e.preventDefault(); handleMove(e); });
+// ========== ДВОЙНОЙ ТАП / ДВОЙНОЙ КЛИК ДЛЯ СУПЕРА ==========
+let lastTap = 0;
+canvas.addEventListener('touchstart', (e) => {
+    const now = Date.now();
+    if (now - lastTap < 300) { // двойной тап (300 мс)
+        e.preventDefault();
+        activateSuper();
+    }
+    lastTap = now;
+});
 
+canvas.addEventListener('dblclick', (e) => {
+    e.preventDefault();
+    activateSuper();
+});
 let superBtn = document.createElement('div');
 superBtn.id = 'super-button';
 superBtn.style.cssText = 'position:fixed; bottom:80px; right:20px; width:70px; height:70px; background:#ff5500; border-radius:50%; z-index:200; display:flex; align-items:center; justify-content:center; color:white; font-weight:bold; cursor:pointer; box-shadow:0 0 15px rgba(255,85,0,0.8); flex-direction:column; font-family:monospace; border:2px solid #ffaa00;';
